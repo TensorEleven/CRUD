@@ -11,8 +11,9 @@
 <div class="container">
     <div class="data-table">
         <?php
-        $sql = "DELETE FROM person_table WHERE id = ".'"'.$_GET["id"].'"'." ";
-                $result = $conn->query($sql);
+        $sql = "DELETE FROM person_table WHERE id =:id ";
+        $statement = $conn->prepare($sql);
+        $statement->execute(['id'=>$_GET['id']]);
                 if($result->connect_error)
                     //die("erreur de suppression");
                     echo "<div class='message error'>erreur lors du suppression</div>";

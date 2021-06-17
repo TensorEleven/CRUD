@@ -5,9 +5,7 @@
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-    <?php 
-        include ("db_connect.php");
-    ?>
+    
 <div class="container">
     <div class="data-table">
         <table>
@@ -20,28 +18,32 @@
                 <th>Manage</th>
             </tr>
             
-            <?php
-            
-            $sql_count_rows = 'SELECT nom  FROM person_table';
-            
-            $count_rows = $conn->query($sql_count_rows);
-            var_dump($count_rows);
+        <?php
+            //$count_rows = $conn->query($sql_count_rows);
             //$rows = conn->query($sql_count_rows);
+            /*
+            pdo
+            $sql_count_rows = "SELECT :name  FROM person_table";
+            
+            $statement = $conn->prepare($sql_count_rows);
+            //$statement = $conn->query($sql_count_rows);
+            $statement->bindParam(':name', "nom");
+            var_dump($statement);
+            $count_rows = $statement->execute();
+            */
 
-            if(isset($_GET["page"])){
-                $offset = 1 + ($_GET["page"]-1)*5 ;
-                $sql = "SELECT id, nom, prenom, naissance, age FROM person_table LIMIT 5 OFFSET ".$offset;
-                echo "OFFSET ".$offset;
-            }
-            else
-                $sql = "SELECT id, nom, prenom, naissance, age FROM person_table LIMIT 5 OFFSET 1";
-                //limit result to 5
+        include ("db_connect.php");
+        
+        if(isset($_GET["page"])){
+            $offset = 1 + ($_GET["page"]-1)*5 ;
+        }
+        else
+            $offset = 1;
 
-            $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    // output data of each row
-                    
-                    while($row = $result->fetch_assoc()){
+        $sql = "SELECT * FROM person_table LIMIT 5 OFFSET ".$offset;
+        $statement = $conn->query($sql);
+        //$statement->execute();
+            while($row = $statement->fetch()){
             ?>
                     <tr>
                         <td><?=$row["id"]?></td>
@@ -54,12 +56,9 @@
                             <a class="manage delete" href="delete.php?id=<?=$row["id"]?>">Delete</a>
                         </td>   
                     </tr>
-                    <?php
+                <?php
                     }
-                  } else {
-                    echo "0 results";
-                  }
-            ?>
+                ?>
             <tr>
                 <td></td>
                 <td></td>
@@ -70,7 +69,7 @@
             </tr>
         </table>
         <div class="pagination">
-            <di class="link">
+            <div class="link">
                 <a href="index.php?page=1">1</a>
                 <a href="index.php?page=2">2</a>
                 <a href="index.php?page=3">3</a>
