@@ -40,6 +40,14 @@
         else
             $offset = 1;
 
+        
+        $count = "SELECT COUNT(*) FROM person_table";
+        $stat = $conn->query($count);
+        $row_count = $stat->fetch();
+        $row_count = $row_count[0];
+        $page_number = ceil($row_count/5);
+
+
         $sql = "SELECT * FROM person_table LIMIT 5 OFFSET ".$offset;
         $statement = $conn->query($sql);
         //$statement->execute();
@@ -70,9 +78,10 @@
         </table>
         <div class="pagination">
             <div class="link">
-                <a href="index.php?page=1">1</a>
-                <a href="index.php?page=2">2</a>
-                <a href="index.php?page=3">3</a>
+            <?php
+                for($i=1;$i<=$page_number;$i++){?>
+                    <a href="index.php?page=<?=$i?>"><?=$i?></a>
+                <?php }?>
             </di>    
         </div>
     </div>
