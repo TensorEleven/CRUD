@@ -35,16 +35,19 @@
         include ("db_connect.php");
         
         if(isset($_GET["page"])){
-            $offset = 1 + ($_GET["page"]-1)*5 ;
+            $offset = ($_GET["page"]-1)*5 ;
         }
         else
-            $offset = 1;
+            $offset = 0;
 
         
         $count = "SELECT COUNT(*) FROM person_table";
         $stat = $conn->query($count);
+        
         $row_count = $stat->fetch();
+        //print_r($row_count);
         $row_count = $row_count[0];
+
         $page_number = ceil($row_count/5);
 
 
